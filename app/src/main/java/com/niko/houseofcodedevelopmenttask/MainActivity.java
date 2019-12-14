@@ -1,10 +1,12 @@
 package com.niko.houseofcodedevelopmenttask;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import com.firebase.client.Firebase;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
+import com.niko.houseofcodedevelopmenttask.database.DatabaseActivity;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -15,22 +17,10 @@ import android.view.MenuItem;
 
 public class MainActivity extends AppCompatActivity {
 
-    private Firebase firebase;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        firebase = new Firebase("https://hoc-task.firebaseio.com/");
-
-        findViewById(R.id.button_database_test).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Firebase firebaseChild = firebase.child("Test");
-                firebaseChild.setValue("test value");
-            }
-        });
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -43,6 +33,16 @@ public class MainActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
+
+        Firebase.setAndroidContext(this);
+        //Firebase firebase = new Firebase("https://hoc-task.firebaseio.com/");
+        //Firebase firebaseChild = firebase.child("Test");
+        //firebaseChild.setValue("test value");
+
+        passToDatabase("https://hoc-task.firebaseio.com/", "Test", "test value");
+
+        // Temporary
+        openDataBaseActivity();
     }
 
     @Override
@@ -66,4 +66,20 @@ public class MainActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+    /**
+     * Opens DatabaseActivity.
+     */
+    public void openDataBaseActivity() {
+        Intent intent = new Intent(this, DatabaseActivity.class);
+        startActivity(intent);
+    }
+
+    public static void passToDatabase(String url, String child, String value) {
+        //Firebase.setAndroidContext(this);
+        Firebase firebase = new Firebase(url);
+        Firebase firebaseChild = firebase.child(child);
+        firebaseChild.setValue(value);
+    }
+
 }
