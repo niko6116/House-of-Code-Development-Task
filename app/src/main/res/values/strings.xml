@@ -11,6 +11,10 @@
     <string name="email_hint">Email</string>
     <string name="password_hint">Password</string>
 
-
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+
+    <string name="db_key_hint">Key</string>
+    <string name="db_value_hint">Value</string>
+    <string name="db_send_data">Send data</string>
+
 </resources>

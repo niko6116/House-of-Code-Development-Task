@@ -4,14 +4,16 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.EditText;
 
 import com.firebase.client.Firebase;
-import com.niko.houseofcodedevelopmenttask.MainActivity;
 import com.niko.houseofcodedevelopmenttask.R;
 
 public class DatabaseActivity extends AppCompatActivity {
 
-    private Firebase firebase;
+    private Firebase root;
+    private EditText key;
+    private EditText value;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,14 +23,20 @@ public class DatabaseActivity extends AppCompatActivity {
         Firebase.setAndroidContext(this);
 
         // Test DB
-        firebase = new Firebase("https://hoc-task.firebaseio.com/");
+        root = new Firebase("https://hoc-task.firebaseio.com/Test");
         findViewById(R.id.button_database_test).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Firebase firebaseChild = firebase.child("Test");
-                firebaseChild.setValue("test value");
+                key = findViewById(R.id.edit_text_key);
+                value = findViewById(R.id.edit_text_value);
+                sendToDatabase(key.getText().toString(), value.getText().toString());
             }
         });
+    }
+
+    private void sendToDatabase(String child, String value) {
+        Firebase firebaseChild = root.child(child);
+        firebaseChild.setValue(value);
     }
 
 }
