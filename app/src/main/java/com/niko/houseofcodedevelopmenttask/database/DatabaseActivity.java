@@ -33,6 +33,7 @@ public class DatabaseActivity extends AppCompatActivity {
     }
 
     private void testSendToDatabase(String val1, String val2) {
+        //Firebase.setAndroidContext(this);
         //root.push().setValue(value);
         //Firebase firebaseKey = root.child(key);
         //firebaseKey.setValue(value);
