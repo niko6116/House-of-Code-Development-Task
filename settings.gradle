@@ -1,0 +1,2 @@
+rootProject.name='House of Code Development Task'
+include ':app'
