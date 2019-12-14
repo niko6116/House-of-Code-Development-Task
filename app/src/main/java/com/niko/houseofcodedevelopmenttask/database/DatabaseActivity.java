@@ -17,18 +17,16 @@ public class DatabaseActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_database);
-    }
 
-    private void testDB() {
-        // DB Test
-        //Firebase.setAndroidContext(this);
-        //firebase = new Firebase("https://hoc-task.firebaseio.com/");
+        Firebase.setAndroidContext(this);
+
+        // Test DB
+        firebase = new Firebase("https://hoc-task.firebaseio.com/");
         findViewById(R.id.button_database_test).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //Firebase firebaseChild = firebase.child("Test");
-                //firebaseChild.setValue("test value");
-                //MainActivity.passToDatabase("https://hoc-task.firebaseio.com/", "Test", "test value");
+                Firebase firebaseChild = firebase.child("Test");
+                firebaseChild.setValue("test value");
             }
         });
     }

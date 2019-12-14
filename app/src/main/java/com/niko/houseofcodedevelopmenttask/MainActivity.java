@@ -34,13 +34,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        Firebase.setAndroidContext(this);
-        //Firebase firebase = new Firebase("https://hoc-task.firebaseio.com/");
-        //Firebase firebaseChild = firebase.child("Test");
-        //firebaseChild.setValue("test value");
-
-        passToDatabase("https://hoc-task.firebaseio.com/", "Test", "test value");
-
         // Temporary
         openDataBaseActivity();
     }
@@ -73,13 +66,6 @@ public class MainActivity extends AppCompatActivity {
     public void openDataBaseActivity() {
         Intent intent = new Intent(this, DatabaseActivity.class);
         startActivity(intent);
-    }
-
-    public static void passToDatabase(String url, String child, String value) {
-        //Firebase.setAndroidContext(this);
-        Firebase firebase = new Firebase(url);
-        Firebase firebaseChild = firebase.child(child);
-        firebaseChild.setValue(value);
     }
 
 }
