@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "759234046363",
+    "firebase_url": "https://hoc-task.firebaseio.com",
+    "project_id": "hoc-task",
+    "storage_bucket": "hoc-task.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:759234046363:android:df5b02174174bbea9fd93e",
+        "android_client_info": {
+          "package_name": "com.niko.houseofcodedevelopmenttask"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "759234046363-t77raui3buv47ekq5g5a40ju23nn4gdi.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.niko.houseofcodedevelopmenttask",
+            "certificate_hash": "9dbd28a3eadf4be6d03deff76752d343f6282474"
+          }
+        },
+        {
+          "client_id": "759234046363-itl0cuf6ncomuokh7p79s46f3er3drqo.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDMLPaZHq_XfueUY7AF6GRPJTc-ua4OnL8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "759234046363-itl0cuf6ncomuokh7p79s46f3er3drqo.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
