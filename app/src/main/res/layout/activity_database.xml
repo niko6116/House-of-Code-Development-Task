@@ -7,15 +7,15 @@
     tools:context=".database.DatabaseActivity">
 
     <EditText
-        android:id="@+id/edit_text_key"
+        android:id="@+id/edit_text_value1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|bottom|center"
         android:layout_marginBottom="8dp"
         android:ems="10"
         android:inputType="textPersonName"
-        android:hint="@string/db_key_hint"
-        app:layout_constraintBottom_toTopOf="@id/edit_text_value"
+        android:hint="@string/db_value_hint1"
+        app:layout_constraintBottom_toTopOf="@id/edit_text_value2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.50"
         app:layout_constraintStart_toStartOf="parent"
@@ -23,19 +23,19 @@
         app:layout_constraintVertical_bias="0.50" />
 
     <EditText
-        android:id="@+id/edit_text_value"
+        android:id="@+id/edit_text_value2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|bottom|center"
         android:layout_marginBottom="8dp"
         android:ems="10"
         android:inputType="textPersonName"
-        android:hint="@string/db_value_hint"
+        android:hint="@string/db_value_hint2"
         app:layout_constraintBottom_toTopOf="@id/button_database_test"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.50"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/edit_text_key"
+        app:layout_constraintTop_toBottomOf="@id/edit_text_value1"
         app:layout_constraintVertical_bias="0.50" />
 
     <Button

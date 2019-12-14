@@ -13,8 +13,8 @@
 
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
 
-    <string name="db_key_hint">Key</string>
-    <string name="db_value_hint">Value</string>
+    <string name="db_value_hint1">Value 1</string>
+    <string name="db_value_hint2">Value 2</string>
     <string name="db_send_data">Send data</string>
 
 </resources>

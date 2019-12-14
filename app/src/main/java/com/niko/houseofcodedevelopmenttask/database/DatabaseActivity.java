@@ -12,8 +12,6 @@ import com.niko.houseofcodedevelopmenttask.R;
 public class DatabaseActivity extends AppCompatActivity {
 
     private Firebase root;
-    private EditText key;
-    private EditText value;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,16 +25,23 @@ public class DatabaseActivity extends AppCompatActivity {
         findViewById(R.id.button_database_test).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                key = findViewById(R.id.edit_text_key);
-                value = findViewById(R.id.edit_text_value);
-                sendToDatabase(key.getText().toString(), value.getText().toString());
+                String value1 = ((EditText) findViewById(R.id.edit_text_value1)).getText().toString();
+                String value2 = ((EditText) findViewById(R.id.edit_text_value2)).getText().toString();
+                testSendToDatabase(value1, value2);
             }
         });
     }
 
-    private void sendToDatabase(String child, String value) {
-        Firebase firebaseChild = root.child(child);
-        firebaseChild.setValue(value);
+    private void testSendToDatabase(String val1, String val2) {
+        //root.push().setValue(value);
+        //Firebase firebaseKey = root.child(key);
+        //firebaseKey.setValue(value);
+
+        Firebase element = root.push();
+        Firebase key1 = element.child("Key1");
+        key1.setValue(val1);
+        Firebase key2 = element.child("Key2");
+        key2.setValue(val2);
     }
 
 }
