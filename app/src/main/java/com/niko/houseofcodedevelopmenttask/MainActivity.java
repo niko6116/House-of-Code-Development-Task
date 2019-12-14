@@ -22,8 +22,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Firebase.setAndroidContext(this);
-
         firebase = new Firebase("https://hoc-task.firebaseio.com/");
 
         findViewById(R.id.button_database_test).setOnClickListener(new View.OnClickListener() {
