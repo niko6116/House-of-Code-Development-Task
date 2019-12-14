@@ -2,6 +2,7 @@ package com.niko.houseofcodedevelopmenttask;
 
 import android.os.Bundle;
 
+import com.firebase.client.Firebase;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -14,11 +15,24 @@ import android.view.MenuItem;
 
 public class MainActivity extends AppCompatActivity {
 
+    private Firebase firebase;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        Firebase.setAndroidContext(this);
+
+        firebase = new Firebase("https://hoc-task.firebaseio.com/");
+
+        findViewById(R.id.button_database_test).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Firebase firebaseChild = firebase.child("Test");
+                firebaseChild.setValue("test value");
+            }
+        });
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
