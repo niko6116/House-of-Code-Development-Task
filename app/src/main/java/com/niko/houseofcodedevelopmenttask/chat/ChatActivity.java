@@ -7,13 +7,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
-import com.google.android.gms.auth.api.Auth;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.common.api.Status;
 import com.google.firebase.auth.FirebaseAuth;
 import com.niko.houseofcodedevelopmenttask.MainActivity;
 import com.niko.houseofcodedevelopmenttask.R;
+import com.niko.houseofcodedevelopmenttask.chat.chatRoom.ChatRoomActivity;
 
 public class ChatActivity extends AppCompatActivity {
 
@@ -28,7 +25,7 @@ public class ChatActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
 
-        // Initialize FirebaseAuth
+        // Initialize FirebaseAuth.
         auth = FirebaseAuth.getInstance();
     }
 
@@ -36,7 +33,8 @@ public class ChatActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
-        // Leave chat room if user is not logged in.
+        /*
+        // Leave chat view if user is not logged in.
         authListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
@@ -49,6 +47,7 @@ public class ChatActivity extends AppCompatActivity {
 
         // Add listener to auth
         auth.addAuthStateListener(authListener);
+        */
 
         // Configure logout button
         findViewById(R.id.button_logout).setOnClickListener(new View.OnClickListener() {
@@ -57,6 +56,9 @@ public class ChatActivity extends AppCompatActivity {
                 signOut();
             }
         });
+
+        // TEMPORARY
+        openChatRoomActivity();
     }
 
     /**
@@ -84,6 +86,14 @@ public class ChatActivity extends AppCompatActivity {
      */
     private void openMainActivity() {
         Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+    }
+
+    /**
+     * Opens ChatRoomActivity.
+     */
+    private void openChatRoomActivity() {
+        Intent intent = new Intent(this, ChatRoomActivity.class);
         startActivity(intent);
     }
 

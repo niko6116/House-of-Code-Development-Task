@@ -21,7 +21,7 @@ public class DatabaseActivity extends AppCompatActivity {
         Firebase.setAndroidContext(this);
 
         // Test DB
-        root = new Firebase("https://hoc-task.firebaseio.com/Test");
+        root = new Firebase("https://hoc-task.firebaseio.com/test");
         findViewById(R.id.button_database_test).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
