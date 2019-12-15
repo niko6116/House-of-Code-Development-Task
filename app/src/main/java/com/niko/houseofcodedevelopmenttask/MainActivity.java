@@ -7,6 +7,7 @@ import com.firebase.client.Firebase;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.niko.houseofcodedevelopmenttask.database.DatabaseActivity;
+import com.niko.houseofcodedevelopmenttask.login.LoginActivity;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -22,6 +23,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // Pre generated start
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -33,11 +35,21 @@ public class MainActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
+        // Pre generated finish
 
-        // Temporary
-        openDataBaseActivity();
+        // Go to login
+        openLoginActivity();
+
+        // For database functionality testing:
+        //openDataBaseActivity();
     }
 
+    /**
+     * Pre generated.
+     *
+     * @param menu
+     * @return
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -45,6 +57,12 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
+    /**
+     * Pre generated.
+     *
+     * @param item
+     * @return
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -58,6 +76,14 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    /**
+     * Opens LoginActivity.
+     */
+    public void openLoginActivity() {
+        Intent intent = new Intent(this, LoginActivity.class);
+        startActivity(intent);
     }
 
     /**

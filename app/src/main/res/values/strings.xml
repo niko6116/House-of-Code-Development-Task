@@ -7,9 +7,11 @@
     <string name="next">Next</string>
     <string name="previous">Previous</string>
 
-    <string name="login">Login</string>
+    <string name="login_label">Login</string>
     <string name="email_hint">Email</string>
     <string name="password_hint">Password</string>
+    <string name="login_button">Login</string>
+    <string name="go_to_facebook_login_button">Go to Facebook login</string>
 
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
 
