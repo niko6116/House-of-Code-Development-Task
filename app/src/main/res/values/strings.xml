@@ -14,6 +14,10 @@
     <string name="logout_button">Logout</string>
     <string name="go_to_facebook_login_button">Go to Facebook login</string>
 
+    <string name="chat_input_message_hint">Input</string>
+
+
+
     <string name="hello_second_fragment">Hello second fragment</string>
 
     <string name="db_value_hint1">Value 1</string>
