@@ -52,7 +52,7 @@ public class LoginActivity extends AppCompatActivity {
         // GoogleSignInClient is given the specifications from the GoogleSignInOptions object.
         googleSignInClient = GoogleSignIn.getClient(this, gso);
 
-        // Configure sign in button
+        // Configure login button
         findViewById(R.id.button_login_google).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

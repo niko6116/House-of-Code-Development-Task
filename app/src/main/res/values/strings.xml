@@ -11,6 +11,7 @@
     <string name="email_hint">Email</string>
     <string name="password_hint">Password</string>
     <string name="login_button">Login</string>
+    <string name="logout_button">Logout</string>
     <string name="go_to_facebook_login_button">Go to Facebook login</string>
 
     <string name="hello_second_fragment">Hello second fragment</string>
