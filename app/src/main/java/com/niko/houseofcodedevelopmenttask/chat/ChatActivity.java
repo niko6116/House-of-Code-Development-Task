@@ -21,11 +21,18 @@ public class ChatActivity extends AppCompatActivity {
     private GoogleApiClient googleApiClient;
 
     @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_chat);
+
+        auth = FirebaseAuth.getInstance();
+    }
+
+    @Override
     protected void onStart() {
         super.onStart();
 
-        auth.addAuthStateListener(authListener);
-
+        /*
         authListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
@@ -35,14 +42,9 @@ public class ChatActivity extends AppCompatActivity {
                 }
             }
         };
-    }
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_chat);
-
-        auth = FirebaseAuth.getInstance();
+        auth.addAuthStateListener(authListener);
+        */
     }
 
     /**

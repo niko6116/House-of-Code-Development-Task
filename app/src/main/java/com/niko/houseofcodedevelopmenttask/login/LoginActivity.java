@@ -15,7 +15,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
-import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -25,7 +25,6 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
-import com.niko.houseofcodedevelopmenttask.MainActivity;
 import com.niko.houseofcodedevelopmenttask.R;
 import com.niko.houseofcodedevelopmenttask.chat.ChatActivity;
 
@@ -34,38 +33,26 @@ public class LoginActivity extends AppCompatActivity {
     // Authenticator
     private FirebaseAuth auth;
 
-    // Listener checking authentication state
-    private FirebaseAuth.AuthStateListener authListener;
-
     // Google sign in client
     private GoogleSignInClient googleSignInClient;
 
-    // Google api client
-    private GoogleApiClient googleApiClient;
-
     // Access code for authentication
     private final static int RC_SIGN_IN = 10;
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-
-        auth.addAuthStateListener(authListener);
-
-        // Check for existing signed in Google account.
-        // If the user is already signed in, the GoogleSignInAccount will be non-null.
-        //GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
-        //updateUI(account);
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        // Initialize FirebaseAuth
-        auth = FirebaseAuth.getInstance();
 
+        // Configure Google sign in
+        // Configure sign in to request the user's ID, basic profile and email address.
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.default_web_client_id)).requestEmail().build();
+        // GoogleSignInClient is given the specifications from the GoogleSignInOptions object.
+        googleSignInClient = GoogleSignIn.getClient(this, gso);
+
+        // Configure sign in button
         findViewById(R.id.button_login_google).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -73,102 +60,15 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-        authListener = new FirebaseAuth.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                // If user is logged in
-                if (firebaseAuth.getCurrentUser() != null) {
-                    openChatActivity();
-                }
-            }
-        };
-
-        // Configure sign in to request the user's ID, basic profile and email address.
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(getString(R.string.default_web_client_id)).requestEmail().build();
-
-        // Build Google api client.
-        googleApiClient = new GoogleApiClient.Builder(this)
-                .enableAutoManage(this, new GoogleApiClient.OnConnectionFailedListener() {
-                    /* Manages what happens during failure. */
-                    @Override
-                    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-                        Toast.makeText(LoginActivity.this,
-                                "Something went wrong", Toast.LENGTH_SHORT).show();
-                    }
-                })
-                .addApi(Auth.GOOGLE_SIGN_IN_API, gso).build();
+        // Initialize FirebaseAuth
+        auth = FirebaseAuth.getInstance();
 
         /*
-        // GoogleSignInClient with the specifications from the GoogleSignInOptions object.
-        googleSignInClient = GoogleSignIn.getClient(this, gso);
-
-        Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(googleSignInClient);
-        startActivityForResult(signInIntent, RC_SIGN_IN);
-
-        findViewById(R.id.button_login_google).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                switch (v.getId()) {
-                    case R.id.button_login_google:
-                        signIn();
-                        break;
-                    // ...
-            }
-        });
-        }
+        // Check for existing signed in Google account
+        // If a user is already signed in, the GoogleSignInAccount will be non-null.
+        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
+        firebaseAuthWithGoogle(account);
         */
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
-        super.onActivityResult(requestCode, resultCode, intent);
-
-        // Result returned from GoogleSignInClient.getSignInIntent(intent);
-        if (requestCode == RC_SIGN_IN) {
-            GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(intent);
-            //Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(intent); // Completed Task returned
-            //handleSignInResult(task);
-            if (result.isSuccess()) {
-                // Google sign in was successful. Authenticate with Firebase.
-                GoogleSignInAccount account = result.getSignInAccount();
-                firebaseAuthWithGoogle(account);
-            } else {
-                // Google sign in failed
-                Toast.makeText(LoginActivity.this,
-                        "Authentication went wrong", Toast.LENGTH_SHORT).show();
-            }
-        }
-    }
-
-    /**
-     * Authenticate with Firebase
-     *
-     * @param account
-     */
-    private void firebaseAuthWithGoogle(GoogleSignInAccount account) {
-        AuthCredential credential = GoogleAuthProvider.getCredential(account.getIdToken(), null);
-        auth.signInWithCredential(credential)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            Log.d("TAG", "signInWithCredential:success");
-                            FirebaseUser user = auth.getCurrentUser();
-                            updateUI(user);
-                        } else {
-                            // If sign in fails, display a message to the user.
-                            Log.w("TAG", "signInWithCredential:failure", task.getException());
-                            //Toast.makeText(LoginActivity.this, "Authentication Failed.", Toast.LENGTH_SHORT).show();
-                            Snackbar.make(new View(LoginActivity.this),
-                                    "Authentication Failed.", Snackbar.LENGTH_SHORT).show();
-                            updateUI(null);
-                        }
-
-                        // ...
-                    }
-                });
     }
 
     /**
@@ -180,23 +80,65 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     /**
-     * If signed in, go to chat room.
-     *
-     * @param user
+     * Called by startActivityForResult(signInIntent, RC_SIGN_IN).
+     * @param requestCode
+     * @param resultCode
+     * @param data
      */
-    private void updateUI(FirebaseUser user) {
-        if (user != null) {
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+
+        // Result returned from GoogleSignInClient.getSignInIntent(data);
+        if (requestCode == RC_SIGN_IN) {
             openChatActivity();
+            // The Task returned from this call is always completed.
+            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
+            try {
+                GoogleSignInAccount account = task.getResult(ApiException.class);
+                firebaseAuthWithGoogle(account);
+            } catch (ApiException ex) {
+                Snackbar.make(findViewById(R.id.button_login_google),
+                        "signInResult:failed code=" + ex.getStatusCode(), Snackbar.LENGTH_LONG).show();
+            }
+        }
+    }
+
+    /**
+     * Authenticates with Firebase
+     *
+     * @param account
+     */
+    private void firebaseAuthWithGoogle(GoogleSignInAccount account) {
+        if (account != null) {
+            AuthCredential credential = GoogleAuthProvider.getCredential(account.getIdToken(), null);
+            auth.signInWithCredential(credential).
+                    addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if (task.isSuccessful()) {
+                                // Sign in was a success
+                                FirebaseUser user = auth.getCurrentUser();
+                                // Update UI
+                                updateUI(user);
+                            } else {
+                                // Sign in failed.
+                                Snackbar.make(findViewById(R.id.button_login_google), "Authentication Failed.", Snackbar.LENGTH_SHORT).show();
+                                updateUI(null);
+                            }
+                        }
+                    });
         }
     }
 
     /**
      * If signed in, go to chat room.
      *
-     * @param account
+     * @param user
      */
-    private void updateUI2(GoogleSignInAccount account) {
-        if (account != null) {
+    private void updateUI(FirebaseUser user) {
+        if (user != null) {
             openChatActivity();
         }
     }

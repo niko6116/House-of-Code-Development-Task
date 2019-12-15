@@ -6,4 +6,50 @@
     android:layout_height="match_parent"
     tools:context=".chat.ChatActivity">
 
+    <TextView
+        android:id="@+id/textview_login"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="32dp"
+        android:text="Chat view"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toTopOf="@id/field_email"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.50" />
+
+    <EditText
+        android:id="@+id/field_email"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginBottom="8dp"
+        android:autofillHints="@string/email_hint"
+        android:ems="10"
+        android:hint="PLACEHOLDER"
+        android:inputType="textEmailAddress"
+        app:layout_constraintBottom_toTopOf="@id/field_password"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textview_login"
+        app:layout_constraintVertical_bias="0.50" />
+
+    <EditText
+        android:id="@+id/field_password"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginBottom="16dp"
+        android:autofillHints="@string/password_hint"
+        android:ems="10"
+        android:hint="PLACEHOLDER"
+        android:inputType="textPassword"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/field_email"
+        app:layout_constraintVertical_bias="0.50" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
