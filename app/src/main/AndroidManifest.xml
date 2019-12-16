@@ -12,7 +12,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".chat.chatRoom.ChatRoomActivity"></activity>
+        <activity android:name=".chat.chatRoom.ChatRoomActivity"/>
         <activity android:name=".chat.ChatActivity" />
         <activity android:name=".login.LoginActivity" />
         <activity android:name=".database.DatabaseActivity" />
