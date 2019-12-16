@@ -23,11 +23,6 @@ public class ChatMessage extends ChatElement {
         messageTime = new Date().getTime();
     }
 
-    @Override
-    public String toString() {
-        return messageUser + "/" + displayTime() + "/" + messageText;
-    }
-
     public ChatMessage() {
 
     }
@@ -38,6 +33,16 @@ public class ChatMessage extends ChatElement {
 
     public void setMessageText(String text) {
         this.messageText = text;
+    }
+
+    public String messageToHtml() {
+        String message = "<b>" + messageUser
+                + "</b><br><i>" + displayTime()
+                + "</i><br>" + messageText;
+
+        message = message.replace("\n", "<br>");
+
+        return message;
     }
 
 }

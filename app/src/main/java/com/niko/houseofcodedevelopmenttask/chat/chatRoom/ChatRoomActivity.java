@@ -2,11 +2,14 @@ package com.niko.houseofcodedevelopmenttask.chat.chatRoom;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.Dialog;
 import android.os.Bundle;
+import android.text.Html;
+import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.ListView;
+import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -18,118 +21,95 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.niko.houseofcodedevelopmenttask.R;
 
-import java.util.ArrayList;
-import java.util.Date;
+import java.util.Map;
 
 public class ChatRoomActivity extends AppCompatActivity {
 
     // The room's key in the database
     private String roomID;
 
-    // Reference to the database
-    private DatabaseReference db;
+    // References to the database
+    private DatabaseReference db_send, db_receive;
 
-    // List of chat elements
-    private ArrayList<ChatElement> chatElements;
+    // List view for chat elements
+    private ScrollView chatView;
 
-    // Adaptor used to inject chat elements into the chat.
-    private ChatAdapter chatAdaptor;
-
-    // List view for chat elements.
-    private ListView listView;
-
-    Dialog d;
+    // Layout for chat elements
+    private LinearLayout layout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat_room);
 
-        // TEMPORARY
-        this.roomID = "room1";
+        // Set room id.
+        this.roomID = "room1"; // TEMPORARY
 
-        // Set up variables.
-        this.db = FirebaseDatabase.getInstance().getReference().child("chat-rooms/" + this.roomID + "/messages");
-        this.chatElements = new ArrayList<>();
-        this.listView = findViewById(R.id.list_view_chat);
+        // Set references for where messages should be sent to and received from.
+        this.db_send = FirebaseDatabase.getInstance().getReference().child("chat-rooms/" + this.roomID + "/messages");
+        this.db_receive = FirebaseDatabase.getInstance().getReference().child("chat-rooms/" + this.roomID + "/messages");
 
-        // Give adaptor to list view.
-        this.chatAdaptor = new ChatAdapter(this, chatElements);
-        this.listView.setAdapter(chatAdaptor);
+        // Set chat view and layout.
+        this.chatView = findViewById(R.id.scroll_view_chat);
+        this.layout = findViewById(R.id.layout_l);
 
         // Initialize button for sending messages.
+        initializeSendMessageFunctionality();
+
+        // Initialize listener for receiving messages.
+        initializeReceiveMessageFunctionality();
+    }
+
+    /**
+     * Initializes the send message button.
+     */
+    private void initializeSendMessageFunctionality() {
         findViewById(R.id.fab_chat).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //displayMessages();
-
                 EditText input = findViewById(R.id.text_input_edit_text_chat);
+                // Read the input field and push a new instance of ChatMessage to the database.
+                ChatRoomActivity.this.db_send.push().setValue(new ChatMessage(
+                        FirebaseAuth.getInstance().getCurrentUser().getDisplayName(),
+                        input.getText().toString()));
 
-                try {
-                    // Read the input field and push a new instance of ChatMessage to the database.
-                    db.push().setValue(new ChatMessage(input.getText().toString(),
-                            FirebaseAuth.getInstance().getCurrentUser().getDisplayName())
-                    );
-
-                    // Input is cleared.
-                    input.setText("");
-                } catch (DatabaseException ex) {
-                }
+                // Input is cleared.
+                input.setText("");
             }
         });
-        if (d != null) {
-            d.show();
-        }
     }
 
     /**
-     * Display messages.
+     * Initializes a listener for receiving messages.
      */
-    private void displayMessages() {
-        d = new Dialog(this);
-        d.setContentView(R.layout.content_chat_room);
-
-        String mUser = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
-        Long mTime = new Date().getTime();
-        String mText = ((EditText) d.findViewById(R.id.text_input_edit_text_chat)).getText().toString();
-
-        // Set data
-        ChatMessage m = new ChatMessage();
-        m.setMessageUser(mUser);
-        m.setMessageTime(mTime);
-        m.setMessageText(mText);
-
-        // Get references to the views of message.xml
-        TextView messageUser = (TextView)findViewById(R.id.text_view_message_user);
-        TextView messageTime = (TextView)findViewById(R.id.text_view_message_time);
-        TextView messageText = (TextView)findViewById(R.id.text_view_message_text);
-
-        // Set their text
-        messageUser.setText(m.getMessageUser());
-        messageTime.setText(m.displayTime());
-        messageText.setText(m.getMessageText());
-
-        ((EditText) findViewById(R.id.text_input_edit_text_chat)).setText("");
-
-        chatAdaptor = new ChatAdapter(ChatRoomActivity.this, chatElements);
-        listView.setAdapter(chatAdaptor);
-    }
-
-    /**
-     * Retrieves messages.
-     *
-     * @return
-     */
-    public ArrayList<ChatElement> retrieveChatMessages() {
-        this.db.addChildEventListener(new ChildEventListener() {
+    private void initializeReceiveMessageFunctionality() {
+        this.db_receive.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                fetchData(dataSnapshot);
+                try {
+                    // Save the message in a map.
+                    Map<String, Object> map = (Map<String, Object>) dataSnapshot.getValue();
+
+                    ChatMessage message = new ChatMessage();
+
+                    message.setMessageUser(map.get("messageUser").toString());
+                    message.passMessageTimeString(map.get("messageTime").toString());
+                    message.setMessageText(map.get("messageText").toString());
+
+                    // Check if the message is from the logged in user and then display message.
+                    if (message.getMessageUser().equals(FirebaseAuth.getInstance().getCurrentUser().getDisplayName())) {
+                        displayMessage(message.messageToHtml(), true);
+                    } else {
+                        displayMessage(message.messageToHtml(), false);
+                    }
+                } catch (DatabaseException ex) {
+                } catch (NullPointerException ex) {
+                }
             }
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                fetchData(dataSnapshot);
+
             }
 
             @Override
@@ -147,52 +127,40 @@ public class ChatRoomActivity extends AppCompatActivity {
 
             }
         });
-        return this.chatElements;
     }
 
     /**
-     * Fetches data from the database.
+     * Displays the passed message.
+     * Arranges it to the right if it was sent by the logged in user.
+     * Displays it to the left otherwise.
      *
-     * @param dataSnapshot
+     * @param message is a message that should be displayed.
+     * @param type    should be true if the message is from the logged in user.
      */
-    private void fetchData(DataSnapshot dataSnapshot) {
-        this.chatElements.clear();
+    private void displayMessage(String message, boolean type) {
+        // Put message into text view.
+        TextView textView = new TextView(ChatRoomActivity.this);
+        textView.setText(Html.fromHtml(message)); // Use 'HTML.fromHtml(...)' for formatting.
 
-        for (DataSnapshot ds : dataSnapshot.getChildren()) {
-            ChatMessage e = ds.getValue(ChatMessage.class);
-            this.chatElements.add(e);
+        // Create layout for text view.
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        lp.weight = 7.0f;
+
+        // Determine if message should be displayed to the left or the right.
+        if (type) {
+            lp.gravity = Gravity.RIGHT;
+            //textView.setBackgroundResource(R.drawable.bubble_in);
+        } else {
+            lp.gravity = Gravity.LEFT;
+            //textView.setBackgroundResource(R.drawable.bubble_out);
         }
-    }
 
-    /**
-     * Not in use
-     */
-    private void displayChatMessages() {
-        /*
-        // get list
-        ListView listView = (ListView)findViewById(R.id.list_view_chat);
-
-        adapter = new FirebaseListAdapter<ChatMessage>(this, ChatMessage.class,
-                R.layout.content_chat_room, FirebaseDatabase.getInstance().getReference()) {
-            @Override
-            protected void populateView(View v, ChatMessage model, int position) {
-                // Get references to the views of message.xml
-                TextView messageUser = (TextView)v.findViewById(R.id.text_view_message_user);
-                TextView messageTime = (TextView)v.findViewById(R.id.text_view_message_time);
-                TextView messageText = (TextView)v.findViewById(R.id.text_view_message_text);
-
-                // Set their text
-                messageText.setText(model.getMessageText());
-                messageUser.setText(model.getMessageUser());
-
-                // Format the date before showing it
-                messageTime.setText(DateFormat.format("dd-MM-yyyy (HH:mm:ss)",
-                        model.getMessageTime()));
-            }
-        };
-
-        listView.setAdapter(adapter);
-        */
+        // Set the text view's layout.
+        textView.setLayoutParams(lp);
+        // Add the text view to the chat layout.
+        this.layout.addView(textView);
+        this.chatView.fullScroll(View.FOCUS_DOWN);
     }
 
 }

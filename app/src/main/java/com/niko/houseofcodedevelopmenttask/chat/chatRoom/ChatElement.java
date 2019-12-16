@@ -26,8 +26,12 @@ public abstract class ChatElement {
         this.messageTime = time;
     }
 
+    public void passMessageTimeString(String time) {
+        this.messageTime = Long.parseLong(time);
+    }
+
     public String displayTime() {
-        return (String) DateFormat.format("dd-MM-yyyy (HH:mm:ss)", messageTime);
+        return (String) DateFormat.format("dd-MM-yyyy HH:mm:ss", messageTime);
     }
 
 }
