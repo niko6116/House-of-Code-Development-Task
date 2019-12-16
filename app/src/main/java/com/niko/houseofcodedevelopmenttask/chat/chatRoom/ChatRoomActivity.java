@@ -149,10 +149,10 @@ public class ChatRoomActivity extends AppCompatActivity {
 
         // Determine if message should be displayed to the left or the right.
         if (type) {
-            lp.gravity = Gravity.RIGHT;
+            lp.gravity = Gravity.END;
             //textView.setBackgroundResource(R.drawable.bubble_in);
         } else {
-            lp.gravity = Gravity.LEFT;
+            lp.gravity = Gravity.START;
             //textView.setBackgroundResource(R.drawable.bubble_out);
         }
 
