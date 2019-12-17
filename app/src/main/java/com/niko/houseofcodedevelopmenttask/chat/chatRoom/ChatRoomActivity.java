@@ -2,6 +2,7 @@ package com.niko.houseofcodedevelopmenttask.chat.chatRoom;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Html;
 import android.view.Gravity;
@@ -19,7 +20,9 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseException;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.niko.houseofcodedevelopmenttask.MainActivity;
 import com.niko.houseofcodedevelopmenttask.R;
+import com.niko.houseofcodedevelopmenttask.chat.ChatActivity;
 
 import java.util.Map;
 
@@ -43,7 +46,12 @@ public class ChatRoomActivity extends AppCompatActivity {
         setContentView(R.layout.activity_chat_room);
 
         // Set room id.
-        this.roomID = "room1"; // TEMPORARY
+        this.roomID = getIntent().getExtras().getString("roomID");
+
+        // Leave if there is no room id.
+        if (roomID == null) {
+            openChatActivity();
+        }
 
         // Set references for where messages should be sent to and received from.
         this.db_send = FirebaseDatabase.getInstance().getReference().child("chat-rooms/" + this.roomID + "/messages");
@@ -142,7 +150,7 @@ public class ChatRoomActivity extends AppCompatActivity {
         TextView textView = new TextView(ChatRoomActivity.this);
         textView.setText(Html.fromHtml(message)); // Use 'HTML.fromHtml(...)' for formatting.
 
-        // Create layout for text view.
+        // Set layout parameters for text view.
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         lp.weight = 7.0f;
@@ -156,11 +164,21 @@ public class ChatRoomActivity extends AppCompatActivity {
             //textView.setBackgroundResource(R.drawable.bubble_out);
         }
 
-        // Set the text view's layout.
+        // Set the text view's layout parameters.
         textView.setLayoutParams(lp);
+
         // Add the text view to the chat layout.
         this.layout.addView(textView);
+
         this.chatView.fullScroll(View.FOCUS_DOWN);
+    }
+
+    /**
+     * Opens ChatActivity.
+     */
+    private void openChatActivity() {
+        Intent intent = new Intent(this, ChatActivity.class);
+        startActivity(intent);
     }
 
 }

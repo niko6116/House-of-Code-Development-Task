@@ -44,7 +44,7 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        // Configure Google sign in
+        // Configure Google sign in.
         // Configure sign in to request the user's ID, basic profile and email address.
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id)).requestEmail().build();
@@ -63,7 +63,7 @@ public class LoginActivity extends AppCompatActivity {
         auth = FirebaseAuth.getInstance();
 
         /*
-        // Check for existing signed in Google account
+        // Check for existing signed in Google account.
         // If a user is already signed in, the GoogleSignInAccount will be non-null.
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
         firebaseAuthWithGoogle(account);
@@ -80,6 +80,7 @@ public class LoginActivity extends AppCompatActivity {
 
     /**
      * Called by startActivityForResult(signInIntent, RC_SIGN_IN).
+     *
      * @param requestCode
      * @param resultCode
      * @param data
@@ -94,6 +95,7 @@ public class LoginActivity extends AppCompatActivity {
             // The Task returned from this call is always completed.
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
             try {
+                // Authenticate.
                 GoogleSignInAccount account = task.getResult(ApiException.class);
                 firebaseAuthWithGoogle(account);
             } catch (ApiException ex) {
@@ -116,9 +118,9 @@ public class LoginActivity extends AppCompatActivity {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if (task.isSuccessful()) {
-                                // Sign in was a success
+                                // Sign in was a success.
                                 FirebaseUser user = auth.getCurrentUser();
-                                // Update UI
+                                // Update UI.
                                 updateUI(user);
                             } else {
                                 // Sign in failed.

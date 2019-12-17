@@ -20,7 +20,7 @@ public class ChatMessage extends ChatElement {
         this.messageText = text;
 
         // Initialize to current time
-        messageTime = new Date().getTime();
+        this.messageTime = new Date().getTime();
     }
 
     public ChatMessage() {
@@ -35,14 +35,17 @@ public class ChatMessage extends ChatElement {
         this.messageText = text;
     }
 
+    /**
+     * @return a String representing the message in HTML.
+     */
     public String messageToHtml() {
-        String message = "<b>" + messageUser
-                + "</b><br><i>" + displayTime()
-                + "</i><br>" + messageText;
+        String string = "<b>" + messageUser + "</b>"
+                + "<br><i>" + displayTime() + "</i>"
+                + "<br>" + messageText;
 
-        message = message.replace("\n", "<br>");
+        string = string.replace("\n", "<br>");
 
-        return message;
+        return string;
     }
 
 }
