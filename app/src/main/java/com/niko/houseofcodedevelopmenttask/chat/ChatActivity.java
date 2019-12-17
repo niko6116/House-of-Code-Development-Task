@@ -111,6 +111,10 @@ public class ChatActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Display a list of chat rooms.
+     * @param chatRooms
+     */
     private void displayChatRooms(List<ChatRoom> chatRooms) {
         // Clear chat room layout.
         this.layout.removeAllViews();
