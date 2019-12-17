@@ -31,7 +31,7 @@ public abstract class ChatElement {
     }
 
     public String displayTime() {
-        return (String) DateFormat.format("dd-MM-yyyy HH:mm:ss", messageTime);
+        return (String) DateFormat.format("HH:mm:ss (dd-MM-yyyy)", messageTime);
     }
 
 }
