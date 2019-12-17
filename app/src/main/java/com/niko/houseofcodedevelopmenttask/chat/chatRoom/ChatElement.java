@@ -7,8 +7,17 @@ import android.text.format.DateFormat;
  */
 public abstract class ChatElement {
 
+    protected String messageUserID;
     protected String messageUser;
     protected long messageTime;
+
+    public String getMessageUserID() {
+        return messageUserID;
+    }
+
+    public void setMessageUserID(String userID) {
+        this.messageUserID = userID;
+    }
 
     public String getMessageUser() {
         return messageUser;

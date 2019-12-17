@@ -133,13 +133,14 @@ public class ChatRoomActivity extends AppCompatActivity {
 
                     ChatMessage message = new ChatMessage();
 
+                    message.setMessageUserID(map.get("messageUserID").toString());
                     message.setMessageUser(map.get("messageUser").toString());
                     message.passMessageTimeString(map.get("messageTime").toString());
                     message.setMessageText(map.get("messageText").toString());
 
                     // Check if the message is from the logged in user and then display message.
-                    if (message.getMessageUser().equals(
-                            FirebaseAuth.getInstance().getCurrentUser().getDisplayName())) {
+                    if (message.getMessageUserID().equals(
+                            FirebaseAuth.getInstance().getCurrentUser().getUid())) {
                         displayMessage(message.messageToHtml(), true);
                     } else {
                         displayMessage(message.messageToHtml(), false);
@@ -173,7 +174,7 @@ public class ChatRoomActivity extends AppCompatActivity {
         //  Initialize listener for receiving images.
 
         // Set reference to image.
-        StorageReference pathRef = this.storageRef.child("chat-images");
+        //StorageReference pathRef = this.storageRef.child("chat-images");
 
         // Download image.
         // Not implemented.
@@ -186,6 +187,7 @@ public class ChatRoomActivity extends AppCompatActivity {
         EditText input = findViewById(R.id.text_input_edit_text_chat);
         // Read the input field and push a new instance of ChatMessage to the database.
         ChatRoomActivity.this.db_send.push().setValue(new ChatMessage(
+                FirebaseAuth.getInstance().getCurrentUser().getUid(),
                 FirebaseAuth.getInstance().getCurrentUser().getDisplayName(),
                 input.getText().toString()));
 
@@ -206,6 +208,7 @@ public class ChatRoomActivity extends AppCompatActivity {
 
     /**
      * If intent was to pick and image and it succeeded, upload the image.
+     *
      * @param requestCode
      * @param resultCode
      * @param data
