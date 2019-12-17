@@ -20,20 +20,5 @@ public class SecondFragment extends Fragment {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_second, container, false);
     }
-
-    public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-
-        String myArg = SecondFragmentArgs.fromBundle(getArguments()).getMyArg();
-        TextView textView = view.findViewById(R.id.textview_second);
-        textView.setText(getString(R.string.hello_second_fragment, myArg));
-
-        view.findViewById(R.id.button_second).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                NavHostFragment.findNavController(SecondFragment.this)
-                        .navigate(R.id.action_SecondFragment_to_FirstFragment);
-            }
-        });
-    }
+    
 }

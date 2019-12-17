@@ -6,7 +6,6 @@ import android.os.Bundle;
 import com.firebase.client.Firebase;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
-import com.niko.houseofcodedevelopmenttask.database.DatabaseActivity;
 import com.niko.houseofcodedevelopmenttask.login.LoginActivity;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -83,14 +82,6 @@ public class MainActivity extends AppCompatActivity {
      */
     public void openLoginActivity() {
         Intent intent = new Intent(this, LoginActivity.class);
-        startActivity(intent);
-    }
-
-    /**
-     * Opens DatabaseActivity.
-     */
-    public void openDataBaseActivity() {
-        Intent intent = new Intent(this, DatabaseActivity.class);
         startActivity(intent);
     }
 
