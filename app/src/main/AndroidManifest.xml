@@ -15,7 +15,6 @@
         <activity android:name=".chat.chatRoom.ChatRoomActivity"/>
         <activity android:name=".chat.ChatActivity" />
         <activity android:name=".login.LoginActivity" />
-        <activity android:name=".database.DatabaseActivity" />
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
