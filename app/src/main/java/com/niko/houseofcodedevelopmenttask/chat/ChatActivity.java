@@ -2,12 +2,9 @@ package com.niko.houseofcodedevelopmenttask.chat;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.constraintlayout.widget.ConstraintSet;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.text.Html;
 import android.view.View;
@@ -27,6 +24,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.niko.houseofcodedevelopmenttask.MainActivity;
 import com.niko.houseofcodedevelopmenttask.R;
 import com.niko.houseofcodedevelopmenttask.chat.chatRoom.ChatRoomActivity;
+import com.niko.houseofcodedevelopmenttask.login.AuthenticationUtility;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -42,11 +40,14 @@ public class ChatActivity extends AppCompatActivity {
     // Reference to the database
     private DatabaseReference db_chat_rooms;
 
-    // List view for chat rooms
+    // Layout for chat rooms
+    private SwipeRefreshLayout srLayout;
+
+    // List for chat rooms (inside srLayout)
     private ScrollView chatRoomView;
 
-    // Layout for chat rooms
-    private LinearLayout layout;
+    // Layout for chat rooms (inside chatRoomView)
+    private LinearLayout chat_overview_layout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,14 +69,28 @@ public class ChatActivity extends AppCompatActivity {
         // Set reference for where chat rooms are located.
         this.db_chat_rooms = FirebaseDatabase.getInstance().getReference().child("chat-rooms");
 
-        // Set chat view and layout.
+        // Set views.
+        this.srLayout = findViewById(R.id.swipe_refresh_chat_rooms);
         this.chatRoomView = findViewById(R.id.scroll_view_chat_rooms);
-        this.layout = findViewById(R.id.layout_crl);
+        this.chat_overview_layout = findViewById(R.id.layout_crl);
+
+        // Configure refresh of chatRoomView.
+        srLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                getChatRooms();
+            }
+        });
     }
 
     @Override
     protected void onStart() {
         super.onStart();
+
+        // Go to MainActivity if logged out.
+        if (AuthenticationUtility.getInstance().isLoggedOut()) {
+            openMainActivity();
+        }
 
         getChatRooms();
     }
@@ -111,9 +126,14 @@ public class ChatActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Display a list of chat rooms.
+     *
+     * @param chatRooms
+     */
     private void displayChatRooms(List<ChatRoom> chatRooms) {
         // Clear chat room layout.
-        this.layout.removeAllViews();
+        this.chat_overview_layout.removeAllViews();
 
         for (ChatRoom room : chatRooms) {
             // Create room view
@@ -156,7 +176,7 @@ public class ChatActivity extends AppCompatActivity {
             textView.setLayoutParams(lpTw);
 
             // Add the room view to the chat layout.
-            this.layout.addView(roomView);
+            this.chat_overview_layout.addView(roomView);
 
             this.chatRoomView.fullScroll(View.FOCUS_DOWN);
         }
@@ -186,7 +206,7 @@ public class ChatActivity extends AppCompatActivity {
      */
     private void signOut() {
         // Firebase sign out
-        auth.signOut();
+        this.auth.signOut();
 
         /*
         // Google sign out
@@ -205,19 +225,20 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     /**
+     * Opens MainActivity.
+     */
+    private void openMainActivity() {
+        AuthenticationUtility.getInstance().loggedOut();
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+    }
+
+    /**
      * Opens ChatRoomActivity.
      */
     public void openChatRoomActivity(String roomID) {
         Intent intent = new Intent(this, ChatRoomActivity.class);
         intent.putExtra("roomID", roomID);
-        startActivity(intent);
-    }
-
-    /**
-     * Opens MainActivity.
-     */
-    private void openMainActivity() {
-        Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
     }
 

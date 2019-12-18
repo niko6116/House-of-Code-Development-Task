@@ -3,17 +3,14 @@ package com.niko.houseofcodedevelopmenttask;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.firebase.client.Firebase;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.firebase.auth.FirebaseUser;
+import com.niko.houseofcodedevelopmenttask.chat.ChatActivity;
+import com.niko.houseofcodedevelopmenttask.login.AuthenticationUtility;
 import com.niko.houseofcodedevelopmenttask.login.LoginActivity;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-
-import android.view.View;
-import android.view.Menu;
-import android.view.MenuItem;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -22,66 +19,60 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Pre generated -start
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        // Create thread for splash screen.
+        Thread splash = new Thread() {
+            public void run() {
+                try {
+                    // Thread sleeps.
+                    sleep(2000);
 
-        FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                    //Remove activity
+                    finish();
+                } catch (Exception e) {
+                }
             }
-        });
-        // Pre generated -finish
+        };
 
-        // Go to login
-        openLoginActivity();
+        // Start thread.
+        splash.start();
 
-        // For database functionality testing:
-        //openDataBaseActivity();
+        // Check for existing signed in Google account.
+        // If a user is already signed in, the GoogleSignInAccount will be non-null.
+        // This will only be done the first time this page is accessed during a session.
+        if (!AuthenticationUtility.getInstance().isLoggedOut()) {
+            GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
+            AuthenticationUtility.getInstance().firebaseAuthWithGoogle(this, account);
+        } else openLoginActivity();
     }
 
     /**
-     * Pre generated.
+     * If signed in, go to chat room.
      *
-     * @param menu
-     * @return
+     * @param user
      */
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    /**
-     * Pre generated.
-     *
-     * @param item
-     * @return
-     */
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+    public void updateUI(FirebaseUser user) {
+        if (user != null) {
+            openChatActivity();
+        } else {
+            openLoginActivity();
         }
-
-        return super.onOptionsItemSelected(item);
     }
 
     /**
      * Opens LoginActivity.
      */
-    public void openLoginActivity() {
+    private void openLoginActivity() {
+        AuthenticationUtility.getInstance().loggedOut();
         Intent intent = new Intent(this, LoginActivity.class);
+        startActivity(intent);
+    }
+
+    /**
+     * Opens ChatActivity.
+     */
+    private void openChatActivity() {
+        AuthenticationUtility.getInstance().loggedIn();
+        Intent intent = new Intent(this, ChatActivity.class);
         startActivity(intent);
     }
 

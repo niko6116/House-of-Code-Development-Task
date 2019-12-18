@@ -14,6 +14,9 @@
     <string name="logout_button">Logout</string>
     <string name="go_to_facebook_login_button">Go to Facebook login</string>
 
+    <string name="facebook_app_id">794412091004359</string>
+    <string name="fb_login_protocol_scheme">fb794412091004359</string>
+
     <string name="chat_input_message_hint">Input</string>
 
 

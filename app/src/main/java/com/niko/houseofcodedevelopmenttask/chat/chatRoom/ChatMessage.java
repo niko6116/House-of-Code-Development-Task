@@ -9,13 +9,15 @@ public class ChatMessage extends ChatElement {
 
     private String messageText;
 
-    public ChatMessage(String user, long time, String text) {
+    public ChatMessage(String userID, String user, long time, String text) {
+        super.messageUserID = userID;
         super.messageUser = user;
         super.messageTime = time;
         this.messageText = text;
     }
 
-    public ChatMessage(String user, String text) {
+    public ChatMessage(String userID, String user, String text) {
+        super.messageUserID = userID;
         super.messageUser = user;
         this.messageText = text;
 
