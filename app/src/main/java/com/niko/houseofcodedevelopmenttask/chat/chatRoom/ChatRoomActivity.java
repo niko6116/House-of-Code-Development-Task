@@ -33,8 +33,10 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.niko.houseofcodedevelopmenttask.MainActivity;
 import com.niko.houseofcodedevelopmenttask.R;
 import com.niko.houseofcodedevelopmenttask.chat.ChatActivity;
+import com.niko.houseofcodedevelopmenttask.login.AuthenticationUtility;
 
 import java.io.IOException;
 import java.util.Map;
@@ -74,7 +76,7 @@ public class ChatRoomActivity extends AppCompatActivity {
 
         // Leave if there is no room id.
         if (roomID == null) {
-            openChatActivity();
+            openMainActivity();
         }
 
         // Set references for where messages should be sent to and received from.
@@ -95,6 +97,16 @@ public class ChatRoomActivity extends AppCompatActivity {
 
         // Initialize listener for receiving messages and images.
         initializeDisplayFunctionality();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        // Go to MainActivity if logged out.
+        if (AuthenticationUtility.getInstance().isLoggedOut()) {
+            openMainActivity();
+        }
     }
 
     /**
@@ -330,10 +342,10 @@ public class ChatRoomActivity extends AppCompatActivity {
     }
 
     /**
-     * Opens ChatActivity.
+     * Opens MainActivity.
      */
-    private void openChatActivity() {
-        Intent intent = new Intent(this, ChatActivity.class);
+    private void openMainActivity() {
+        Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
     }
 

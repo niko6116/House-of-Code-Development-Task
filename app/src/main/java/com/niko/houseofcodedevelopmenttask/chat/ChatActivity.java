@@ -24,6 +24,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.niko.houseofcodedevelopmenttask.MainActivity;
 import com.niko.houseofcodedevelopmenttask.R;
 import com.niko.houseofcodedevelopmenttask.chat.chatRoom.ChatRoomActivity;
+import com.niko.houseofcodedevelopmenttask.login.AuthenticationUtility;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -86,6 +87,11 @@ public class ChatActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
+        // Go to MainActivity if logged out.
+        if (AuthenticationUtility.getInstance().isLoggedOut()) {
+            openMainActivity();
+        }
+
         getChatRooms();
     }
 
@@ -122,6 +128,7 @@ public class ChatActivity extends AppCompatActivity {
 
     /**
      * Display a list of chat rooms.
+     *
      * @param chatRooms
      */
     private void displayChatRooms(List<ChatRoom> chatRooms) {
@@ -199,7 +206,7 @@ public class ChatActivity extends AppCompatActivity {
      */
     private void signOut() {
         // Firebase sign out
-        auth.signOut();
+        this.auth.signOut();
 
         /*
         // Google sign out
@@ -218,19 +225,20 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     /**
+     * Opens MainActivity.
+     */
+    private void openMainActivity() {
+        AuthenticationUtility.getInstance().loggedOut();
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+    }
+
+    /**
      * Opens ChatRoomActivity.
      */
     public void openChatRoomActivity(String roomID) {
         Intent intent = new Intent(this, ChatRoomActivity.class);
         intent.putExtra("roomID", roomID);
-        startActivity(intent);
-    }
-
-    /**
-     * Opens MainActivity.
-     */
-    private void openMainActivity() {
-        Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
     }
 
