@@ -35,8 +35,8 @@
             android:text="@string/logout_button" />
     </androidx.appcompat.widget.Toolbar>
 
-    <ScrollView
-        android:id="@+id/scroll_view_chat_rooms"
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipe_refresh_chat_rooms"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginStart="16dp"
@@ -46,23 +46,29 @@
         android:layout_marginRight="16dp"
         android:layout_marginBottom="40dp"
         android:layout_weight="20"
-        android:background="#4D006464"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent" >
 
-        <RelativeLayout
-            android:id="@+id/layout_crr"
+        <ScrollView
+            android:id="@+id/scroll_view_chat_rooms"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent"
+            android:background="#4D006464">
 
-            <LinearLayout
-                android:id="@+id/layout_crl"
+            <RelativeLayout
+                android:id="@+id/layout_crr"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical" />
-        </RelativeLayout>
-    </ScrollView>
+                android:layout_height="wrap_content">
+
+                <LinearLayout
+                    android:id="@+id/layout_crl"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" />
+            </RelativeLayout>
+        </ScrollView>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

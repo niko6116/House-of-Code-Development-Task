@@ -88,7 +88,7 @@ public class ChatRoomActivity extends AppCompatActivity {
         // Set mainView, chatView and chatLayout.
         this.mainView = findViewById(R.id.layout_chat_room_main);
         this.chatView = findViewById(R.id.scroll_view_chat);
-        this.chat_layout = findViewById(R.id.layout_l);
+        this.chat_layout = findViewById(R.id.layout_cl);
 
         // Initialize the buttons.
         initializeChatButtonFunctionality();

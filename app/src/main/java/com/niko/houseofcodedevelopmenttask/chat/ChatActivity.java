@@ -2,12 +2,9 @@ package com.niko.houseofcodedevelopmenttask.chat;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.constraintlayout.widget.ConstraintSet;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.text.Html;
 import android.view.View;
@@ -42,11 +39,14 @@ public class ChatActivity extends AppCompatActivity {
     // Reference to the database
     private DatabaseReference db_chat_rooms;
 
-    // List view for chat rooms
+    // Layout for chat rooms
+    private SwipeRefreshLayout srLayout;
+
+    // List for chat rooms (inside srLayout)
     private ScrollView chatRoomView;
 
-    // Layout for chat rooms
-    private LinearLayout layout;
+    // Layout for chat rooms (inside chatRoomView)
+    private LinearLayout chat_overview_layout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,9 +68,18 @@ public class ChatActivity extends AppCompatActivity {
         // Set reference for where chat rooms are located.
         this.db_chat_rooms = FirebaseDatabase.getInstance().getReference().child("chat-rooms");
 
-        // Set chat view and layout.
+        // Set views.
+        this.srLayout = findViewById(R.id.swipe_refresh_chat_rooms);
         this.chatRoomView = findViewById(R.id.scroll_view_chat_rooms);
-        this.layout = findViewById(R.id.layout_crl);
+        this.chat_overview_layout = findViewById(R.id.layout_crl);
+
+        // Configure refresh of chatRoomView.
+        srLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                getChatRooms();
+            }
+        });
     }
 
     @Override
@@ -117,7 +126,7 @@ public class ChatActivity extends AppCompatActivity {
      */
     private void displayChatRooms(List<ChatRoom> chatRooms) {
         // Clear chat room layout.
-        this.layout.removeAllViews();
+        this.chat_overview_layout.removeAllViews();
 
         for (ChatRoom room : chatRooms) {
             // Create room view
@@ -160,7 +169,7 @@ public class ChatActivity extends AppCompatActivity {
             textView.setLayoutParams(lpTw);
 
             // Add the room view to the chat layout.
-            this.layout.addView(roomView);
+            this.chat_overview_layout.addView(roomView);
 
             this.chatRoomView.fullScroll(View.FOCUS_DOWN);
         }
